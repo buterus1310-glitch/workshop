@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Производство: от мастера до ИП</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F7F8;--card:#fff;--ink:#16181C;--mute:#6B7280;--line:#E4E6EA;--acc:#0E7C66;--accink:#fff;--bad:#C8402F;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1214;--card:#171B1E;--ink:#ECEFF1;--mute:#8B949B;--line:#262C30;--acc:#34C3A3;--accink:#0F1214;--bad:#F0705F}}
+:root[data-theme="dark"]{--bg:#0F1214;--card:#171B1E;--ink:#ECEFF1;--mute:#8B949B;--line:#262C30;--acc:#34C3A3;--accink:#0F1214;--bad:#F0705F}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Onest',system-ui,sans-serif;font-size:15px;line-height:1.45}
+main{max-width:520px;margin:0 auto;padding:22px 18px 48px}
+h1{font-size:24px;margin:0 0 6px;letter-spacing:-.01em}
+.lbl{color:var(--mute);font-size:13px}.d{color:var(--mute);font-size:13px;margin:2px 0 8px}
+.nw{font-size:38px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.stats b{display:block;font-size:15px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.row{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.btn{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:500;cursor:pointer;text-align:left}
+.btn.p{background:var(--acc);color:var(--accink);border-color:var(--acc)}.btn.c{text-align:center}
+.btn.s{flex:none;padding:8px 12px;font-size:14px;text-align:center}
+.btn:disabled{opacity:.4;cursor:default}.btn:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.list .btn{display:block;width:100%;margin-bottom:8px}.list small{display:block;color:var(--mute);font-weight:400}
+.card{border-left:3px solid var(--acc);padding:4px 0 4px 14px;margin:16px 0}.card h3{margin:0 0 4px;font-size:17px}.card p{margin:0 0 10px;color:var(--mute)}
+.card .btn{display:block;width:100%;margin-bottom:8px}
+.as{padding:12px 0;border-bottom:1px solid var(--line)}
+.as summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;font-weight:500}.as summary::-webkit-details-marker{display:none}
+.h{display:flex;justify-content:space-between;font-weight:500}
+.ord{margin:10px 0;padding-top:10px;border-top:1px solid var(--line)}.on{font-weight:500}
+.opt{display:flex;flex-direction:column;gap:2px;margin-bottom:6px;font-size:14px}.opt span:first-child{font-weight:500}.opt span:last-child{color:var(--mute);font-size:13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.chip{padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--ink);font:inherit;font-size:13px;cursor:pointer}.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sec{margin:24px 0 4px;font-weight:700}
+.g{color:#16875A}.y{color:#B7791F}.r{color:var(--bad)}
+.bar{height:4px;background:var(--line);border-radius:2px;margin:2px 0 8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
+.ord summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:8px}.ord summary::-webkit-details-marker{display:none}
+.rep{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:14px}.rep div{display:flex;justify-content:space-between;padding:2px 0}.rep .t{font-weight:700;border-top:1px solid var(--line);margin-top:4px;padding-top:6px}
+.log{margin-top:20px;color:var(--mute);font-size:14px}.log div{padding:4px 0}.log div:first-child{color:var(--ink)}
+.link{background:none;border:0;color:var(--mute);font:inherit;font-size:13px;text-decoration:underline;margin-top:26px;cursor:pointer;padding:0}
+</style></head>
+<body><main id="app"></main>
+<script>
+const MAT={wood:'Дерево',metal:'Металл',plast:'Пластик',glass:'Стекло и камень'},MP={wood:15000,metal:35000,plast:30000,glass:40000};
+const LV=[['Ручной инструмент',15000],['Электроинструмент',40000],['Базовый станок',150000],['Профессиональный станок',450000],['Автоматическая линия',1200000]];
+const SPEED=[1,.85,.7,.55,.4],DEF=[1,.85,.7,.55,.4],WASTE=[1,.97,.93,.88,.82],LAB=['Ниже рынка','Средняя','Высокая'];
+const P=[['wood','Разделочные доски и мелочь',2500,1,1],['wood','Стол и стулья',25000,5,2],['wood','Кухня или шкаф',90000,12,3],['wood','Лестница или двери',70000,10,3],['wood','Беседка и дачная мебель',150000,16,4],
+['metal','Подставки и кронштейны',3000,1,1],['metal','Мангал или печь',25000,5,2],['metal','Калитка, ворота, забор',60000,8,2],['metal','Лестница и перила',90000,10,3],['metal','Лофт-мебель из металла',70000,8,3],['metal','Металлоконструкции (ферма, ангар)',600000,30,5],
+['plast','Запчасть на 3D-принтере',1500,.5,1],['plast','Корпус для устройства',8000,2,2],['plast','Сувениры и фигурки',4000,1.5,1],['plast','Малая серия литьём',60000,8,3],['plast','Вывеска из пластика',40000,6,2],
+['glass','Столешница или подоконник',30000,5,2],['glass','Памятник',60000,8,3],['glass','Плитка и блоки',40000,6,2],['glass','Витрина или перегородка',80000,9,3],['glass','Зеркала и декор',8000,2,1],
+[['wood','metal'],'Лофт-стол: дерево и металл',45000,7,3],[['wood','metal'],'Беседка с металлическим каркасом',200000,20,4],[['glass','metal'],'Витрина в металлической раме',90000,10,3]];
+P.splice(0,P.length,['wood','Партия разделочных досок',30000,2,1],['wood','Стол и стулья',60000,4,2],['wood','Кухня или шкаф',150000,9,3],['wood','Лестница или двери',120000,8,3],['wood','Беседка и дачная мебель',250000,14,4],
+['metal','Партия подставок и кронштейнов',30000,2,1],['metal','Мангал или печь',50000,4,2],['metal','Калитка, ворота, забор',90000,7,2],['metal','Лестница и перила',140000,9,3],['metal','Лофт-мебель из металла',110000,7,3],['metal','Металлоконструкции (ферма, ангар)',900000,30,5],
+['plast','Партия запчастей (3D-печать)',25000,1.5,1],['plast','Корпуса для устройств',40000,3,2],['plast','Партия сувениров и фигурок',30000,2,1],['plast','Малая серия литьём',100000,8,3],['plast','Вывеска из пластика',70000,6,2],
+['glass','Столешница или подоконник',60000,4,2],['glass','Памятник',90000,7,3],['glass','Плитка и блоки',70000,5,2],['glass','Витрина или перегородка',130000,8,3],['glass','Зеркала и декор',35000,2.5,1],
+[['wood','metal'],'Лофт-стол: дерево и металл',80000,6,3],[['wood','metal'],'Беседка с металлическим каркасом',300000,16,4],[['glass','metal'],'Витрина в металлической раме',150000,9,3]);
+const CH={acq:['Знакомые','Бесплатно: бывает густо, бывает пусто'],avito:['Авито','Бесплатное объявление и платное продвижение'],soc:['Соцсети','Посты бесплатно, таргет за деньги'],blog:['Блогеры','Дорого и рискованно'],card:['Визитки и флаеры','Дёшево, эффект небольшой'],biz:['Бизнес: кафе и офисы','Нужен рейтинг от 3,0. Платят по договорённости'],big:['Крупные компании','Только ИП, рейтинг от 3,5. Большие заказы']};
+const ADS={avito:[8000,8,.3,1.5,'Продвинуть'],soc:[12000,12,.2,1.6,'Таргет'],blog:[35000,45,0,1.8,'Заказать рекламу'],card:[4000,5,.5,1.2,'Напечатать']};
+const STAFF={mech:['Слесарь',[25000,40000,60000],['держит износ до 80%','держит износ до 40%','держит износ до 10% и чинит поломки']],mstr:['Станочник',[35000,55000,80000],['+12 сил','+25 сил','+40 сил']],qc:['Контролёр качества',[30000,45000,65000],['брака на четверть меньше','брака вдвое меньше','брака в четыре раза меньше']],mgr:['Менеджер по продажам',[35000,60000,90000],['заявок +10%, цену клиента называет с ошибкой до 25%','заявок +25%, крупнее, ошибка до 15%','заявок +50%, самые крупные, ошибка до 5%']],ad:['Рекламщик',[30000,45000,70000],['заявок +10%','заявок +25%','заявок +40%']],asst:['Помощник',[20000,30000,45000],['+8 сил','+15 сил','+22 силы']],acc:['Бухгалтер',[30000,40000,55000],['налог −8%','налог −15%','налог −25%']],cour:['Курьер, грузчик',[25000,35000,45000],['+5 сил','+10 сил','+15 сил']]};
+const TN=['слабый','средний','хороший'],ENG={asst:[8,15,22],mstr:[12,25,40],cour:[5,10,15]},CAP=[80,40,10],NM=['Иван','Пётр','Анна','Олег','Мария','Сергей','Дмитрий','Елена','Алексей','Наталья'];
+const RENT={wh:25000,off:20000},PREM={garage:['Гараж или дом',0],mast:['Мастерская',15000],shop:['Цех',60000]};
+const CONTR=4500,REG=15000,KEY='prodsim-v4';
+let S;
+function fresh(){return{stage:'mat',m:1,cash:50000,rating:3,exp:0,ip:false,eq:{},prem:'garage',ws:{},staff:[],debt:0,rc:[],idx:{wood:1,metal:1,plast:1,glass:1},leads:{},pool:[],sort:'',hist:[],bots:initBots(),st:{},reps:0,late:0,ads:{},energy:20,tax:0,mo:0,rp:null,acc:{rev:0,mat:0,ads:0},log:[],ev:null,cur:null,open:{},mk:1,pn:1}}
+function load(){try{const j=localStorage.getItem(KEY);if(j)return JSON.parse(j)}catch(e){}return fresh()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const F=n=>Math.round(n).toLocaleString('ru-RU')+' ₽',E=n=>String(Math.round(n*10)/10).replace('.',','),R=n=>n.toFixed(1).replace('.',',');
+const add=t=>{S.log.unshift(t);S.log=S.log.slice(0,6)};
+const mats=p=>[].concat(p[0]),lvl=p=>Math.min(...mats(p).map(m=>S.eq[m].l));
+const maxL=()=>S.prem==='shop'?5:S.prem==='mast'?3:2;
+const emax=()=>20+(S.ip?10:0)+(S.st.ooo?20:0)+(S.st.w2?25:0)+(S.st.br?40:0)+(S.prem==='mast'?5:S.prem==='shop'?10:0)+en('asst')+en('mstr')+en('cour');
+const sf=()=>1+.25*Math.sin(S.m/12*2*Math.PI);
+const isB=k=>k==='biz'||k==='big';
+const TM=l=>[{pm:1+.04*l.N,am:1,d:l.N,adv:0},{pm:1,am:1.1,d:1,adv:.5},{pm:.95,am:1.2,d:0,adv:1}][l.sel];
+const tmx=l=>l.D?{pm:1.15,am:1,d:l.D,adv:.3,sp:l.D}:isB(l.k)?TM(l):{pm:1,am:1,d:0,adv:1};
+function mkL(k){let l=mkL0(k);for(let t=0;t<8&&gate(l).length&&Math.random()<.85;t++)l=mkL0(k);if(Math.random()<.12){l.u=1;l.bd=Math.round(l.bd*1.5/10)*10}return l}
+function mkL0(k){const av=P.map((p,i)=>i).filter(i=>mats(P[i]).every(m=>S.eq[m])),big=k==='big',biz=isB(k);
+ let pool=av;if(biz){const q=av.filter(i=>P[i][4]>=2);if(q.length)pool=q}
+ const i=pool[Math.floor(Math.random()*pool.length)],p=P[i],D=S.ip&&Math.random()<.2?2+Math.floor(Math.random()*2):0,wm=(D?1.5:1)*(k!=='acq'&&bt('mgr')>=0?[1,1.2,1.5][bt('mgr')]:1)*(S.ip?1.4+Math.min(1.6,(S.m-(S.ipM||S.m))*.04):1)*(S.st.ooo&&biz?1.3:1),W=(biz?1+Math.random()*(big?2.5:1):.6+Math.random())*wm,m=(a,z)=>a+Math.random()*(z-a);
+ const mi=mats(p),idx=mi.reduce((a,x)=>a+S.idx[x],0)/mi.length,lv=lvl(p),pf=.7+.1*S.rating;
+ const K=Math.round(p[2]*W*pf*.7*idx*WASTE[lv-1]/10)*10;
+ const mm=S.ip?1.5+Math.min(.5,(S.m-(S.ipM||S.m))*.01):1,pr=[K*(1+mm*m(.05,.1)),K*(1+mm*m(.15,.3)),K*(1+mm*m(.6,1))].map(x=>Math.round(x/10)*10),x=K>100000?Math.max(0,Math.round((K+pr[1]-200000)/50000)):0;
+ return{i,K,M:pr[1],k,x,D,id:Math.random().toString(36).slice(2,7),er:Math.random()*2-1,bd:Math.round(pr[1]*(.95+Math.random()*.35)/10)*10,N:1+Math.floor(Math.random()*3),sel:0,e:Math.max(.5,Math.round(p[3]*W*SPEED[lv-1]*Math.min(2,.5+K/200000)*2)/2),pr,a:[.95,m(.5,.8),m(.12,.2)]}}
+function base(){const rf=S.rating/3,s=sf(),o={},x={acq:8,avito:7,soc:4,blog:0,card:0,biz:S.rating>=3?3:0,big:S.ip&&S.rating>=3.5?1.2:0};
+ for(const k in x){const n=x[k]?Math.round(x[k]*Math.pow(Math.random(),1.3)*S.mk*s*rf*S.pn*(k!=='acq'?mg():1)*(S.ws.off?1.2:1)*(S.st.br?1.25:1)):0;o[k]=[];const thr=Math.max(0,(emax()-30)*250);for(let i=0;i<n;i++){const l=mkL(k);if(l.pr[1]-l.K<thr&&Math.random()<.85)continue;o[k].push(l)}}const nr=S.reps||0;for(let i=0;i<nr;i++)if(Math.random()<.6){const l=mkL('acq');l.rc=1;l.bd=Math.round(l.bd*1.15/10)*10;o.acq.push(l)}S.pn=1;return o}
+function gate(l){const p=P[l.i],c=p[4],n=[],lv=lvl(p);
+ if(mats(p).some(m=>S.eq[m].b))n.push('оборудование сломано');
+ if(lv+1<c)n.push(`оборудование ${c-1} ур.`);
+ if(S.rating<1.5+.5*c)n.push(`рейтинг ${R(1.5+.5*c)}`);
+ if(S.exp<l.x)n.push(`опыт ${l.x} заказов`);return n}
+function chooseMat(m){S.eq[m]={l:1,cd:100,b:false};S.stage='prem';draw()}
+function choosePrem(p){S.prem=p;S.stage='play';if(p==='mast')S.cash-=0;S.energy=emax();S.pool=mkPool();S.leads=base();add('Старт: самозанятый, 50 000 ₽ на счёте.');draw()}
+function term(k,i,j){S.leads[k][i].sel=j;draw()}
+function rmv(k,i){S.leads[k].splice(i,1);draw()}
+function sortBy(v){S.sort=v;draw()}
+function take(k,i){if(S.cur||S.ev)return;const l=S.leads[k][i];if(!l||gate(l).length)return;const t=tmx(l),mu=(l.mu||1)*t.pm,c=l.bd/l.M*(.9+.04*S.rating),p=Math.min(.97,t.am/(1+Math.exp((mu-c)/.12)));S.leads[k].splice(i,1);
+ if(Math.random()>=p){add(`«${P[l.i][1]}»: клиент отказался, цена не подошла.`);S.note={t:'Клиент отказался',d:`«${P[l.i][1]}»: ${why(mu,c)}`};S.up=1;return draw()}
+ S.cur={l,pr:pc(l,t),t};add(`«${P[l.i][1]}» принят в работу.`);S.up=1;draw()}
+function takeOld(k,i,j){if(S.cur||S.ev)return;const l=S.leads[k][i];if(!l||gate(l).length)return;const t=tmx(l);S.leads[k].splice(i,1);
+ const rb=[1,.8+.07*S.rating,.4+.25*S.rating][j];if(Math.random()>=Math.min(.97,l.a[j]*t.am*rb*Math.min(1.35,Math.pow(l.bd/(l.pr[j]*t.pm),1.2)))){add(`«${P[l.i][1]}»: клиент отказался, цена не подошла.`);S.note={t:'Клиент отказался',d:`«${P[l.i][1]}»: клиент передумал, цена его не устроила, и он выбрал другого мастера.`};S.up=1;return draw()}
+ S.cur={l,pr:Math.round(l.pr[j]*t.pm/10)*10,t};add(`«${P[l.i][1]}» принят в работу.`);S.up=1;draw()}
+const eF=l=>Math.max(.5,Math.round(l.e*.6*2)/2);
+const eM=(l,q)=>q===0?Math.max(.5,Math.round(l.e*.6*2)/2):q===1?l.e:Math.max(.5,Math.round(l.e*1.5*2)/2);
+function work(q){const c=S.cur,l=c.l,e=eM(l,q);if(S.energy<e||S.cash<l.K)return;S.energy-=e;c.e=e;c.q=q;
+ if(Math.random()<.05){add('Клиент нашёл дешевле, заказ сорвался. Силы потрачены.');S.note={t:'Клиент отказался',d:`«${P[l.i][1]}»: пока вы работали, клиент нашёл дешевле. Силы потрачены.`};S.up=1;S.cur=null;return draw()}
+ const p=P[l.i],wr=Math.max(...mats(p).map(m=>100-S.eq[m].cd));let df=(q===0?.25*DEF[lvl(p)-1]*Math.max(.6,1-S.exp/200):0)+(wr<=30?0:wr<=70?.07:.3);df*=Math.max(.1,S.staff.filter(w=>w.r==='qc').reduce((a,w)=>a*[.75,.5,.25][w.t],1));
+ if(Math.random()<df){c.df=1;S.bad=(S.bad||0)+1;add('Получился брак. Выбери, что делать.');S.up=1;return draw()}
+ done(1)}
+function redo(){const c=S.cur;if(S.energy<c.e||S.cash<c.l.K)return;S.energy-=c.e;S.cash-=c.l.K;S.acc.mat+=c.l.K;done(2)}
+function disc(){done(0)}
+function done(f){const c=S.cur,l=c.l,p=P[l.i],pr=f===0?Math.round(c.pr*.7/10)*10:c.pr;
+ S.cash-=l.K;S.acc.mat+=l.K;S.acc.rev+=pr;S.exp++;S.mo++;if(c.q>=1&&f!==0&&Math.random()<.3)S.reps=Math.min(8,(S.reps||0)+1);
+ const adv=Math.round(pr*c.t.adv);S.cash+=adv;if(pr>adv){if(c.t.sp){for(let q=1;q<=c.t.sp;q++)S.rc.push({m:S.m+q,a:(pr-adv)/c.t.sp})}else S.rc.push({m:S.m+c.t.d,a:pr-adv})}
+ S.tax+=pr*(S.ip?.06:(Math.random()<.7?.04:.06))*(bt('acc')>=0?1-[.08,.15,.25][bt('acc')]:1);
+ S.rating=Math.max(1,Math.min(5,S.rating+(f===0?-.2:f===2?-.05:[.02,.01,.08][c.q])));
+ let t=`«${p[1]}» выполнен: ${F(pr)}, себестоимость ${F(l.K)}${pr>adv?`, к получению ${F(pr-adv)}`:''}.`;
+ mats(p).forEach(m=>{const q=S.eq[m];q.cd=Math.max(0,q.cd-3-Math.floor(Math.random()*3));if(!q.b&&(q.cd<=0||(q.cd<40&&Math.random()<.15))){q.b=true;t+=` Сломалось: ${MAT[m]}.`}});
+ capw();add(t);S.cur=null;draw()}
+function cancel(){S.rating=Math.max(1,S.rating-.1);add('Вы отказались от заказа, рейтинг −0,1.');S.cur=null;draw()}
+const eqP=m=>Math.max(15000,LV[S.eq[m].l-1][1]);
+function upg(m){const q=S.eq[m],c=LV[q.l][1];if(q.l>=5||q.l>=maxL()||S.cash<c)return;S.cash-=c;q.l++;q.cd=100;q.b=false;add(`${MAT[m]}: ${LV[q.l-1][0]}.`);draw()}
+function svc(m){const q=S.eq[m],c=Math.round(eqP(m)*(q.b?.12:.04));if(S.cash<c)return;S.cash-=c;q.cd=100;q.b=false;add(`${MAT[m]}: ${q.b?'ремонт':'обслуживание'} за ${F(c)}.`);draw()}
+const NEED=[0,10,25,45];
+function unlock(m){const n=Object.keys(S.eq).length;if(n>3||S.exp<NEED[n]||S.cash<MP[m])return;S.cash-=MP[m];S.eq[m]={l:1,cd:100,b:false};add(`Открыт материал: ${MAT[m]}.`);draw()}
+function setPrem(p){if(p==='shop'&&!S.ip)return;const mx=p==='shop'?5:p==='mast'?3:2;if(Object.values(S.eq).some(q=>q.l>mx)){add('Оборудование слишком крупное для этого помещения.');return draw()}S.prem=p;S.energy=Math.min(S.energy,emax());draw()}
+function tog(k){if(!S.ip)return;S.ws[k]=!S.ws[k];draw()}
+const ef=()=>S.late?.5:1,bt=r=>Math.max(-1,...S.staff.filter(w=>w.r===r).map(w=>w.t)),sw=(r,a)=>S.staff.filter(w=>w.r===r).reduce((s,w)=>s+a[w.t],0),en=k=>Math.round(S.staff.filter(w=>w.r===k).reduce((s,w)=>s+(ENG[k]?ENG[k][w.t]:0),0)*ef()),mg=()=>Math.min(2.5,1+(sw('mgr',[.1,.25,.5])+sw('ad',[.1,.25,.4]))*ef());
+const BN=['Мастерская Север','Деревянных дел','СтальПро','ПластикЛаб','КаменьГрад','Дом Мастеров'],initBots=()=>BN.map(n=>({n,b:120000+Math.random()*480000,r:0,rt:3.2+Math.random()*1.7}));
+const LOANS=[[100000,12],[500000,24],[2000000,36]],lpay=(a,n)=>Math.round(a*.015/(1-Math.pow(1.015,-n))),stc=()=>(S.st.ooo?15000:0)+(S.st.w2?60000:0)+(S.st.br?120000:0);
+const fixed=()=>PREM[S.prem][1]+(S.ws.wh?RENT.wh:0)+(S.ws.off?RENT.off:0)+S.staff.reduce((a,w)=>a+w.pay,0)+(S.ip?CONTR:0)+(S.debt>0?S.lp:0)+stc();
+const why=(mu,c)=>{const b=S.bots.filter(x=>x.rt>S.rating);if(mu-c>.1)return'цена показалась слишком высокой.';const r=Math.random();if(r<.4&&b.length){const x=b[Math.floor(Math.random()*b.length)];return`конкурент «${x.n}» с рейтингом ${R(x.rt)} предложил такую же работу.`}return r<.7?'клиент решил пока отложить заказ.':'клиент нашёл мастера, который начнёт раньше.'};
+function statsHtml(){const H=S.hist.slice(-12),mx=Math.max(1,...H.map(x=>Math.abs(x.net)),...H.map(x=>x.rev)),lr=S.rp?S.rp.rev:0,rk=S.bots.map(b=>({n:b.n,r:b.r||0})).concat([{n:'Вы',r:lr,me:1}]).sort((a,b)=>b.r-a.r);
+ return{rank:rk.findIndex(x=>x.me)+1,html:`<div class="d">Выручка и прибыль по месяцам</div>`+H.map(x=>`<div class="d">Мес ${x.m}: ${F(x.rev)}, прибыль ${F(x.net)}</div><div class="bar"><i style="width:${Math.max(0,x.rev)/mx*100}%"></i></div>`).join('')+`<div class="sec">Рейтинг мастерских</div>`+rk.map((x,i)=>`<div class="h"><span>${i+1}. ${x.n}</span><span>${F(x.r)}</span></div>`).join('')+(S.rc.length?`<div class="sec">Ожидаемые выплаты</div>`+S.rc.slice().sort((a,b)=>a.m-b.m).map(x=>`<div class="h"><span>Месяц ${x.m}</span><span>${F(x.a)}</span></div>`).join(''):'')}}
+function capw(){const b=bt('mech');if(b>=0){const c=100-CAP[b];for(const m in S.eq){const q=S.eq[m];q.cd=Math.max(q.cd,c);if(b>0&&q.b)q.b=false}}}
+function mkPool(){const o=[];for(const k in STAFF)for(let t=0;t<3;t++)if(Math.random()<.7)o.push({id:k+t+Math.random().toString(36).slice(2,5),r:k,t,n:NM[Math.floor(Math.random()*NM.length)],pay:Math.round(STAFF[k][1][t]*(.92+Math.random()*.16)/1000)*1000});return o}
+function hire(id){if(!S.ip||S.staff.length>=10)return;const w=S.pool.find(x=>x.id===id);if(!w)return;S.staff.push({id:w.id,r:w.r,t:w.t,pay:w.pay,n:w.n});S.pool=S.pool.filter(x=>x.id!==id);S.energy=Math.min(S.energy+(ENG[w.r]?ENG[w.r][w.t]:0),emax());add(`Нанят: ${STAFF[w.r][0].toLowerCase()} ${w.n} (${TN[w.t]}), ${F(w.pay)} в месяц.`);draw()}
+function fire(id){const w=S.staff.find(x=>x.id===id);if(!w)return;S.staff=S.staff.filter(x=>x!==w);S.energy=Math.min(S.energy,emax());add(`Уволен: ${w.n}.`);draw()}
+function regIP(){if(S.ip||S.cash<REG)return;S.cash-=REG;S.ip=true;S.ipM=S.m;S.energy+=10;add('Вы оформили ИП: налог 6% и взносы 4 500 ₽ в месяц.');draw()}
+function step(id,d){const l=fl(id);if(!l)return;l.mu=Math.max(.5,Math.min(2,Math.round((l.mu||1)*100+d)/100));draw()}
+function train(id){const w=S.staff.find(x=>x.id===id);if(!w||w.t>=2)return;const c=Math.round(w.pay*3);if(S.cash<c)return;S.cash-=c;w.t++;w.pay=Math.round(STAFF[w.r][1][w.t]*(.95+Math.random()*.1)/1000)*1000;S.energy=Math.min(S.energy+(ENG[w.r]?ENG[w.r][w.t]-ENG[w.r][w.t-1]:0),emax());add(`${w.n}: обучение за ${F(c)}, теперь ${TN[w.t]}.`);draw()}
+function buyst(k){const c={ooo:100000,w2:500000,br:1500000}[k];if(!S.ip||S.st[k]||S.cash<c||(k==='w2'&&!S.st.ooo)||(k==='br'&&!S.st.w2))return;S.cash-=c;S.st[k]=1;S.energy+=({ooo:20,w2:25,br:40})[k];add(`Открыто: ${{ooo:'ООО',w2:'второй цех',br:'филиал'}[k]}.`);draw()}
+function loan(a,n){if(S.debt>0)return;S.debt=a;S.ln=n;S.lp=lpay(a,n);S.cash+=a;add(`Кредит ${F(a)} под 18% годовых.`);draw()}
+function repay(){if(S.debt<=0||S.cash<S.debt)return;S.cash-=S.debt;S.debt=0;add('Кредит погашен.');draw()}
+function promo(k){const a=ADS[k];if(S.ads[k]||S.cash<a[0]||S.cur||S.ev)return;S.cash-=a[0];S.acc.ads+=a[0];S.ads[k]=1;
+ const g=Math.round(a[1]*(a[2]+Math.random()*(a[3]-a[2]))*S.mk*sf()*S.rating/3);for(let i=0;i<g;i++)S.leads[k].push(mkL(k));
+ add(g>0?`${CH[k][0]}: реклама за ${F(a[0])} дала ${g} заявок.`:`${CH[k][0]}: реклама за ${F(a[0])} не сработала.`);draw()}
+const EV=[
+()=>{const o=Object.keys(S.eq).filter(m=>!S.eq[m].b);if(!o.length)return null;const m=o[Math.floor(Math.random()*o.length)],c=Math.round(eqP(m)*.12);return{t:'Поломка станка',d:`Сломалось оборудование: ${MAT[m]}.`,o:[[`Починить сейчас: ${F(c)}`,()=>{S.cash-=c;return`Починили за ${F(c)}.`}],['Починить позже',()=>{S.eq[m].b=true;return`${MAT[m]}: оборудование стоит до ремонта.`}]]}},
+()=>({t:'Сбой поставки сырья',d:'Поставщик подвёл, сырья не хватает.',o:[['Срочно закупить дороже (−8 000 ₽)',()=>{S.cash-=8000;return'Закупили сырьё срочно, минус 8 000 ₽.'}],['Ждать (−5 сил в этом месяце)',()=>{S.energy=Math.max(0,S.energy-5);return'Простой: силы сократились на 5.'}]]}),
+()=>{const pr=Math.round((60000+Math.random()*60000)/1000)*1000;return{t:'Крупный заказ со сроками',d:`Нужно сделать до конца месяца: заплатят ${F(pr)}, понадобится 14 сил и около ${F(pr*.45)} на материалы.`,o:[['Взяться',()=>{if(S.energy<14||S.cash<pr*.45){S.rating=Math.max(1,S.rating-.3);return'Не хватило сил или денег, заказ сорван: рейтинг −0,3.'}S.energy-=14;S.cash+=pr*.55;S.acc.rev+=pr;S.acc.mat+=pr*.45;S.exp+=2;S.tax+=pr*(S.ip?.06:.05);S.rating=Math.min(5,S.rating+.1);return`Заказ сдан в срок: чистыми ${F(pr*.55)}.`}],['Отказаться',()=>'Вы отказались.']]}},
+()=>({t:'Новый конкурент',d:'Рядом открылась мастерская с низкими ценами.',o:[['Вложиться в рекламу (−4 000 ₽)',()=>{S.cash-=4000;for(let i=0;i<3;i++)S.leads.avito.push(mkL('avito'));return'Реклама удержала клиентов: +3 заявки на Авито.'}],['Ничего не делать',()=>{for(const k in S.leads)S.leads[k]=S.leads[k].slice(0,Math.floor(S.leads[k].length*.75));return'Часть клиентов ушла: заявок меньше на четверть.'}]]}),
+()=>{if(!S.staff.length)return null;const w=S.staff[Math.floor(Math.random()*S.staff.length)],np=Math.round(w.pay*1.2/1000)*1000;return{t:'Работник просит повышение',d:`${w.n}, ${STAFF[w.r][0].toLowerCase()} (${TN[w.t]}), хочет ${F(np)} в месяц.`,o:[[`Повысить до ${F(np)}`,()=>{w.pay=np;return`${w.n}: зарплата ${F(np)}.`}],['Отказать',()=>{if(Math.random()<.5){S.staff=S.staff.filter(x=>x!==w);S.energy=Math.min(S.energy,emax());return`${w.n} уволился.`}return`${w.n} остался на прежних условиях.`}]]}}];
+function evPick(i){const r=S.ev.o[i][1]();S.ev=null;add(r);draw()}
+function next(){if(S.ev||S.cur)return;capw();
+ const rent=(PREM[S.prem][1])+(S.ws.wh?RENT.wh:0)+(S.ws.off?RENT.off:0)+stc(),sal=S.staff.reduce((a,w)=>a+w.pay,0),con=S.ip?CONTR:0,int=Math.round(S.debt*.015),pp=S.debt>0?Math.min(S.debt,Math.max(0,S.lp-int)):0,tax=Math.round(S.tax);
+ S.m++;let rcv=0;S.rc=S.rc.filter(x=>{if(x.m<=S.m){rcv+=x.a;return false}return true});S.cash+=rcv;
+ S.cash-=tax+rent+sal+con+int+pp;S.debt-=pp;if(S.debt>0&&--S.ln<=0){S.cash-=S.debt;S.debt=0}
+ if(S.staff.length&&S.cash<0){S.late=(S.late||0)+1;if(S.late>=3){S.staff=[];S.late=0;add('Работники ушли: зарплату слишком долго задерживали.')}}else S.late=0;
+ const A=S.acc,net=A.rev-A.mat-A.ads-tax-rent-sal-con-int;
+ S.rp={m:S.m-1,rev:A.rev,mat:A.mat,ads:A.ads,tax,rent,sal,con,int,rcv,net};
+ S.hist.push({m:S.m-1,rev:A.rev,net});for(const b of S.bots)b.r=Math.round(b.b*(1+S.m*.012)*(.8+Math.random()*.4));S.acc={rev:0,mat:0,ads:0};S.tax=0;if(S.mo===0)S.rating=Math.max(1,S.rating-.1);if(S.bad)S.rating=Math.max(1,S.rating-Math.min(.5,.1*S.bad));S.bad=0;S.mo=0;
+ for(const m in S.idx)S.idx[m]=Math.max(.75,Math.min(1.4,1+(S.idx[m]-1)*.5+(Math.random()-.5)*.3));
+ const wn=[];for(const m in S.eq){const q=S.eq[m],w=100-q.cd,lv=w>70?2:w>30?1:0;if(lv>(q.nl||0))wn.push(lv===2?`${MAT[m]}: износ ${w}%, оборудование на пределе!`:`${MAT[m]}: износ ${w}%, ниже среднего.`);q.nl=lv}if(wn.length){S.note={t:'Износ оборудования',d:wn.join(' ')};S.up=1}
+ S.mk=.3+Math.random()*1.5;S.ads={};S.energy=emax();S.pool=mkPool();S.leads=base();
+ if(S.m>2&&Math.random()<.3){S.ev=EV[Math.floor(Math.random()*EV.length)]()}
+ if(S.cash<-20000)S.stage='over';draw()}
+function again(){S=fresh();draw()}
+function expSave(){const c=btoa(unescape(encodeURIComponent(JSON.stringify(S))));(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>alert('Код сохранения скопирован. Сохрани его в заметках.'),()=>prompt('Скопируй код сохранения:',c))}
+function impSave(){const c=prompt('Вставь код сохранения:');if(!c)return;try{S=JSON.parse(decodeURIComponent(escape(atob(c.trim()))));draw()}catch(e){alert('Код не подходит.')}}
+function fl(id){for(const k in S.leads)for(const l of S.leads[k])if(l.id===id)return l}
+function pc(l,t){return Math.round(l.M*(l.mu||1)*t.pm/10)*10}
+function slide(id,v){const l=fl(id);if(!l)return;l.mu=v/100;const p=pc(l,tmx(l)),e=document.getElementById('pc'+id);if(e)e.innerHTML=`Ваша цена ${F(p)} (${v}% от средней), прибыль ${F(p-l.K)}`}
+function chRow(k){const c=CH[k],a=ADS[k],L=S.leads[k]||[],lock=S.cur||S.ev,mt=bt('mgr');
+ const ix=L.map((l,i)=>i);if(S.sort==='e')ix.sort((x,y)=>L[x].e-L[y].e);if(S.sort==='p')ix.sort((x,y)=>(L[y].M-L[y].K)-(L[x].M-L[x].K));
+ const it=ix.map(i=>{const l=L[i],p=P[l.i],g=gate(l),t=tmx(l),v=Math.round((l.mu||1)*100),pr=pc(l,t);
+  return`<details class="ord" ${S.open[l.id]?'open':''} ontoggle="S.open['${l.id}']=this.open"><summary><span class="on">${l.u?'<b class="r">СРОЧНО</b> ':''}${l.rc?'<b>Постоянный клиент</b> ':''}${p[1]}</span><span class="d">~${F(l.M-l.K)}, ${E(l.e)} сил${l.D?', '+l.D+' мес':''}</span></summary>`
+  +(l.u?`<div class="r">Срочный заказ: сделать нужно в этом месяце, клиент готов платить больше обычного.</div>`:'')
+  +`<div class="d">${mats(p).map(m=>MAT[m]).join(' + ')}, сложность ${p[4]}</div><div class="d">Средняя цена ${F(l.M)}, себестоимость ${F(l.K)}</div>`
+  +(mt>=0&&k!=='acq'?`<div class="d">Менеджер: клиент готов заплатить около ${F(Math.round(l.bd*(1+(l.er||0)*[.25,.15,.05][mt])/1000)*1000)}</div>`:'')
+  +(l.D?`<div class="d">Длинный заказ: оплата частями на ${l.D} мес</div>`:isB(k)?`<div class="chips">${[`Отсрочка ${l.N} мес`,'Аванс 50%','Сразу'].map((x,j)=>`<button class="chip ${l.sel===j?'on':''}" onclick="term('${k}',${i},${j})">${x}</button>`).join('')}</div>`:'')
+  +(g.length?`<div class="d">Нужно: ${g.join(', ')}</div>`:'')
+  +`<div class="row"><button class="btn s" ${g.length||lock||v<=50?'disabled':''} onclick="step('${l.id}',-5)">−5%</button><button class="btn s" ${g.length||lock||v>=200?'disabled':''} onclick="step('${l.id}',5)">+5%</button></div><div class="d" id="pc${l.id}">Ваша цена ${F(pr)} (${v}% от средней), прибыль ${F(pr-l.K)}</div><div class="row"><button class="btn s p" ${g.length||lock?'disabled':''} onclick="take('${k}',${i})">Предложить цену</button><button class="btn s" onclick="rmv('${k}',${i})">Убрать заявку</button></div></details>`}).join('');
+ return`<details class="as" ${S.open[k]?'open':''} ontoggle="S.open['${k}']=this.open"><summary><span>${c[0]}</span><span>${L.length} заявок</span></summary><div class="d">${c[1]}</div>${it||'<div class="d">Сейчас заявок нет.</div>'}${a?`<div class="row"><button class="btn s" onclick="promo('${k}')" ${S.ads[k]||S.cash<a[0]||lock?'disabled':''}>${a[4]} ${F(a[0])}</button></div>`:''}</details>`}
+function chRowOld2(k){const c=CH[k],a=ADS[k],L=S.leads[k]||[],lock=S.cur||S.ev,mt=-1;
+ const ix=L.map((l,i)=>i);if(S.sort==='e')ix.sort((x,y)=>L[x].e-L[y].e);if(S.sort==='p')ix.sort((x,y)=>(L[y].pr[1]-L[y].K)-(L[x].pr[1]-L[x].K));
+ const it=ix.map(i=>{const l=L[i],p=P[l.i],g=gate(l),t=tmx(l);
+  return`<details class="ord" ${S.open[l.id]?'open':''} ontoggle="S.open['${l.id}']=this.open"><summary><span class="on">${p[1]}</span><span class="d">~${F(l.pr[1]-l.K)}, ${E(l.e)} сил${l.D?', '+l.D+' мес':''}</span></summary><div class="d">${mats(p).map(m=>MAT[m]).join(' + ')}, сложность ${p[4]}</div>`
+  +(mt>=0&&k!=='acq'?`<div class="d">Менеджер: клиент готов заплатить около ${F(Math.round(l.bd*(1+(l.er||0)*[.25,.15,.05][mt])/1000)*1000)}</div>`:'')
+  +(l.D?`<div class="d">Длинный заказ: оплата частями на ${l.D} мес</div>`:isB(k)?`<div class="chips">${[`Отсрочка ${l.N} мес`,'Аванс 50%','Сразу'].map((x,j)=>`<button class="chip ${l.sel===j?'on':''}" onclick="term('${k}',${i},${j})">${x}</button>`).join('')}</div>`:'')
+  +(g.length?`<div class="d">Нужно: ${g.join(', ')}</div>`:'')
+  +l.pr.map((x,j)=>`<button class="btn opt" ${g.length||lock?'disabled':''} onclick="take('${k}',${i},${j})"><span>${LAB[j]}</span><span>Заплатят ${F(x*t.pm)}, себестоимость ${F(l.K)}, прибыль ${F(x*t.pm-l.K)}</span></button>`).join('')+`<div class="row"><button class="btn s" onclick="rmv('${k}',${i})">Убрать заявку</button></div></details>`}).join('');
+ return`<details class="as" ${S.open[k]?'open':''} ontoggle="S.open['${k}']=this.open"><summary><span>${c[0]}</span><span>${L.length} заявок</span></summary><div class="d">${c[1]}</div>${it||'<div class="d">Сейчас заявок нет.</div>'}${a?`<div class="row"><button class="btn s" onclick="promo('${k}')" ${S.ads[k]||S.cash<a[0]||lock?'disabled':''}>${a[4]} ${F(a[0])}</button></div>`:''}</details>`}
+function chRowOld(k){const c=CH[k],a=ADS[k],L=S.leads[k]||[],lock=S.cur||S.ev;
+ const it=L.map((l,i)=>{const p=P[l.i],g=gate(l),t=tmx(l);
+  return`<div class="ord"><div class="on">${p[1]}</div><div class="d">${mats(p).map(m=>MAT[m]).join(' + ')}, сложность ${p[4]}, ${E(l.e)} сил</div>`
+  +(isB(k)?`<div class="chips">${[`Отсрочка ${l.N} мес`,'Аванс 50%','Сразу'].map((x,j)=>`<button class="chip ${l.sel===j?'on':''}" onclick="term('${k}',${i},${j})">${x}</button>`).join('')}</div>`:'')
+  +(g.length?`<div class="d">Нужно: ${g.join(', ')}</div>`:'')
+  +l.pr.map((x,j)=>`<button class="btn opt" ${g.length||lock?'disabled':''} onclick="take('${k}',${i},${j})"><span>${LAB[j]}</span><span>Заплатят ${F(x*t.pm)}, себестоимость ${F(l.K)}, прибыль ${F(x*t.pm-l.K)}</span></button>`).join('')+`</div>`}).join('');
+ return`<details class="as" ${S.open[k]?'open':''} ontoggle="S.open['${k}']=this.open"><summary><span>${c[0]}</span><span>${L.length} заявок</span></summary><div class="d">${c[1]}</div>${it||'<div class="d">Сейчас заявок нет.</div>'}${a?`<div class="row"><button class="btn s" onclick="promo('${k}')" ${S.ads[k]||S.cash<a[0]||lock?'disabled':''}>${a[4]} ${F(a[0])}</button></div>`:''}</details>`}
+function draw(){let h='';
+ if(S.stage==='mat')h=`<h1>Производство</h1><div class="lbl">Начнёшь самозанятым мастером с 50 000 ₽. С какого материала стартуем? Остальные откроются позже.</div><div class="list" style="margin-top:18px">${Object.keys(MAT).map(m=>`<button class="btn" onclick="chooseMat('${m}')">${MAT[m]}<small>Ручной инструмент включён в старт</small></button>`).join('')}</div>`;
+ else if(S.stage==='prem')h=`<h1>Где работаем?</h1><div class="lbl">Помещение можно сменить позже.</div><div class="list" style="margin-top:18px"><button class="btn" onclick="choosePrem('garage')">Гараж или дом<small>Бесплатно, оборудование до 2 уровня</small></button><button class="btn" onclick="choosePrem('mast')">Мастерская<small>15 000 ₽ в месяц, +5 сил, оборудование до 3 уровня</small></button></div>`;
+ else if(S.stage==='over')h=`<h1>Банкротство</h1><p>Долги стали слишком большими, мастерская закрылась. Прошло ${S.m} мес.</p><button class="btn p c" onclick="again()">Начать заново</button>`;
+ else{const rc=S.rc.reduce((a,x)=>a+x.a,0),s=sf();
+  h=`<div class="lbl">${S.ip?'ИП':'Самозанятый'}, месяц ${S.m}, ${s>1.12?'высокий сезон':s<.88?'низкий сезон':'обычный сезон'}</div><div class="nw">${F(S.cash)}</div>`;
+  h+=`<div class="stats"><div class="lbl">Рейтинг<b>${R(S.rating)} из 5</b></div><div class="lbl">Силы<b>${E(S.energy)} из ${emax()}</b></div><div class="lbl">Опыт<b>${S.exp} заказов</b></div><div class="lbl">Ждём оплату<b>${F(rc)}</b></div><div class="lbl">Долг<b>${F(S.debt)}</b></div>${(()=>{const f=fixed(),w=f>0?Math.floor(Math.max(0,S.cash)/f):99;return`<div class="lbl">Запас<b class="${f>0&&w<2?'r':''}">${f>0?'на '+w+' мес':'—'}</b></div>`})()}<div class="lbl">Сырьё<b>${Object.keys(S.eq).map(m=>MAT[m].slice(0,4)+' ×'+R(S.idx[m])).join(', ')}</b></div></div>`;
+  {const st=statsHtml();h+=`<details class="as" ${S.open.stat?'open':''} ontoggle="S.open.stat=this.open"><summary><span>📊 Статистика</span><span class="lbl">место ${st.rank} из ${S.bots.length+1}</span></summary>${st.html}</details>`}if(S.rp){const r=S.rp;h+=`<div class="rep"><div class="lbl">Итоги месяца ${r.m}</div><div><span>Выручка</span><span>${F(r.rev)}</span></div><div><span>Материалы</span><span>−${F(r.mat)}</span></div><div><span>Налог</span><span>−${F(r.tax)}</span></div><div><span>Аренда и зарплаты</span><span>−${F(r.rent+r.sal)}</span></div><div><span>Взносы и проценты</span><span>−${F(r.con+r.int)}</span></div><div><span>Реклама</span><span>−${F(r.ads)}</span></div><div class="t"><span>Чистая прибыль</span><span>${F(r.net)}</span></div></div>`}
+  if(S.note)h+=`<div class="card"><h3>${S.note.t}</h3><p>${S.note.d}</p><button class="btn" onclick="S.note=null;draw()">Понятно</button></div>`;const c=S.cur;
+  if(c){const l=c.l,p=P[l.i],f=eF(l);
+   h+=`<div class="card"><h3>${p[1]}</h3>`+(c.df?`<p>Брак. Переделка потребует ${E(c.e)} сил и ещё ${F(l.K)} на материалы. Скидка клиенту: ${F(Math.round(c.pr*.7/10)*10)} вместо ${F(c.pr)}.</p><button class="btn" onclick="redo()" ${S.energy<c.e||S.cash<l.K?'disabled':''}>Переделать</button><button class="btn" onclick="disc()">Дать скидку клиенту</button>`
+    :`<p>Цена ${F(c.pr)}, материалы ${F(l.K)}. Выбери, как делать заказ.</p><button class="btn" onclick="work(0)" ${S.energy<eM(l,0)||S.cash<l.K?'disabled':''}>Быстро: ${E(eM(l,0))} сил, возможен брак</button><button class="btn" onclick="work(1)" ${S.energy<eM(l,1)||S.cash<l.K?'disabled':''}>Обычно: ${E(eM(l,1))} сил, без брака, рейтинг растёт очень медленно</button><button class="btn" onclick="work(2)" ${S.energy<eM(l,2)||S.cash<l.K?'disabled':''}>Качественно: ${E(eM(l,2))} сил, рейтинг растёт заметно</button><button class="btn" onclick="cancel()">Отказаться от заказа</button>`)+`</div>`}
+  if(S.ev)h+=`<div class="card"><h3>${S.ev.t}</h3><p>${S.ev.d}</p>${S.ev.o.map((o,i)=>`<button class="btn" onclick="evPick(${i})">${o[0]}</button>`).join('')}</div>`;
+  h+=`<div class="row"><button class="btn p c" onclick="next()" ${S.ev||S.cur?'disabled':''}>Следующий месяц</button></div>`;
+  h+=`<div class="sec">Заявки</div><div class="chips">${[['','Как есть'],['e','Меньше сил'],['p','Больше прибыли']].map(x=>`<button class="chip ${(S.sort||'')===x[0]?'on':''}" onclick="sortBy('${x[0]}')">${x[1]}</button>`).join('')}</div>${['acq','avito','soc','blog','card','biz'].concat(S.ip?['big']:[]).map(chRow).join('')}`;
+  h+=`<div class="sec">Оборудование</div>`+Object.keys(S.eq).map(m=>{const q=S.eq[m],nx=LV[q.l];return`<div class="as"><div class="h">${MAT[m]}, ${q.l} ур.<span class="${q.b||100-q.cd>70?'r':100-q.cd>30?'y':'g'}">${q.b?'сломано':'износ '+(100-q.cd)+'%'}</span></div><div class="d">${LV[q.l-1][0]}. Выше уровень: меньше сил, меньше брака и отходов, сложнее заказы.</div><div class="row">${q.l<5?`<button class="btn s p" onclick="upg('${m}')" ${S.cash<nx[1]||q.l>=maxL()?'disabled':''}>Улучшить ${F(nx[1])}</button>`:''}<button class="btn s" onclick="svc('${m}')" ${S.cash<Math.round(eqP(m)*(q.b?.12:.04))||(!q.b&&q.cd>=100)?'disabled':''}>${q.b?'Починить':'Обслужить'} ${F(eqP(m)*(q.b?.12:.04))}</button></div></div>`}).join('');
+  const n=Object.keys(S.eq).length;
+  h+=Object.keys(MAT).filter(m=>!S.eq[m]).map(m=>`<div class="as"><div class="h">${MAT[m]}<span>${F(MP[m])}</span></div><div class="d">Нужны оборудование и опыт: ${NEED[Math.min(n,3)]} заказов.</div><div class="row"><button class="btn s p" onclick="unlock('${m}')" ${n>3||S.exp<NEED[n]||S.cash<MP[m]?'disabled':''}>Открыть</button></div></div>`).join('');
+  h+=`<div class="sec">Помещения</div><div class="chips">${Object.keys(PREM).map(p=>`<button class="chip ${S.prem===p?'on':''}" onclick="setPrem('${p}')" ${p==='shop'&&!S.ip?'disabled':''}>${PREM[p][0]}${PREM[p][1]?', '+F(PREM[p][1]):''}</button>`).join('')}</div>`;
+  h+=`<div class="chips"><button class="chip ${S.ws.wh?'on':''}" onclick="tog('wh')" ${S.ip?'':'disabled'}>Склад ${F(RENT.wh)}</button><button class="chip ${S.ws.off?'on':''}" onclick="tog('off')" ${S.ip?'':'disabled'}>Офис ${F(RENT.off)}</button></div><div class="d">Склад, офис, цех и сотрудники доступны после ИП. Офис даёт +20% заявок.</div>`;
+  if(!S.ip)h+=`<div class="as"><div class="h">Оформить ИП<span>${F(REG)}</span></div><div class="d">Налог 6% и взносы ${F(CONTR)} в месяц. Открывает цех, склад, офис, сотрудников, крупных заказчиков.</div><div class="row"><button class="btn s p" onclick="regIP()" ${S.cash<REG?'disabled':''}>Оформить</button></div></div>`;
+  else h+=`<div class="sec">Сотрудники: ${S.staff.length} из 10</div>`+Object.keys(STAFF).map(k=>{const hs=S.staff.filter(w=>w.r===k),o=S.pool.filter(x=>x.r===k);return`<details class="as" ${S.open['s'+k]?'open':''} ontoggle="S.open['s${k}']=this.open"><summary><span>${STAFF[k][0]}</span><span class="lbl">${hs.length?hs.length+' в штате':'нет'}</span></summary>${hs.map(w=>`<div class="row"><span class="d" style="flex:1">${w.n}, ${TN[w.t]}, ${F(w.pay)}: ${STAFF[k][2][w.t]}</span>${w.t<2?`<button class="btn s" onclick="train('${w.id}')" ${S.cash<Math.round(w.pay*3)?'disabled':''}>Обучить ${F(w.pay*3)}</button>`:''}<button class="btn s" onclick="fire('${w.id}')">Уволить</button></div>`).join('')}${S.staff.length<10?o.map(x=>`<button class="btn opt" onclick="hire('${x.id}')"><span>Нанять: ${x.n}, ${TN[x.t]}</span><span>${F(x.pay)} в месяц: ${STAFF[k][2][x.t]}</span></button>`).join('')||'<div class="d">Сейчас кандидатов нет.</div>':'<div class="d">Штат полный.</div>'}</details>`}).join('');
+  if(S.ip)h+=`<div class="sec">Развитие</div>`+[['ooo','ООО',100000,'+20 сил, заказы от бизнеса на 30% крупнее. Бухгалтерия 15 000 ₽ в месяц.',1],['w2','Второй цех',500000,'+25 сил. Аренда 60 000 ₽ в месяц. Нужно ООО.','ooo'],['br','Филиал',1500000,'+40 сил и заявок на 25% больше. Аренда 120 000 ₽ в месяц. Нужен второй цех.','w2']].map(x=>`<div class="as"><div class="h">${x[1]}<span>${F(x[2])}</span></div><div class="d">${x[3]}</div><div class="row"><button class="btn s ${S.st[x[0]]?'':'p'}" onclick="buyst('${x[0]}')" ${S.st[x[0]]||S.cash<x[2]||(x[4]!==1&&!S.st[x[4]])?'disabled':''}>${S.st[x[0]]?'Открыто':'Открыть'}</button></div></div>`).join('');
+  h+=`<div class="as"><div class="h">Кредит<span>18% годовых</span></div><div class="d">${S.debt>0?`Остаток ${F(S.debt)}, платёж ${F(S.lp)} в месяц, осталось ${S.ln} мес.`:'Платёж равными частями каждый месяц. Выбери кредит:'}</div><div class="row">${S.debt>0?`<button class="btn s" onclick="repay()" ${S.cash<S.debt?'disabled':''}>Погасить досрочно ${F(S.debt)}</button>`:LOANS.map(x=>`<button class="btn s p" onclick="loan(${x[0]},${x[1]})">${F(x[0])} на ${x[1]} мес, платёж ${F(lpay(x[0],x[1]))}</button>`).join('')}</div></div>`;
+  h+=`<div class="log">${S.log.map(l=>`<div>${l}</div>`).join('')}</div><div class="row" style="margin-top:22px"><button class="btn s" onclick="expSave()">Скопировать сохранение</button><button class="btn s" onclick="impSave()">Загрузить сохранение</button></div><button class="link" onclick="if(confirm('Начать заново?'))again()">Начать заново</button>`}
+ document.getElementById('app').innerHTML=h;if(S.up){S.up=0;window.scrollTo({top:0,behavior:'smooth'})}save()}
+S=load();draw();
+</script></body></html>
